@@ -1,11 +1,8 @@
-import { TSAnyKeyword } from '@babel/types';
 import { Avatar, Card, Icon, Layout, message, Table, Tooltip, Upload } from 'antd';
 import { UploadChangeParam } from 'antd/lib/upload/interface';
-import { ApolloQueryResult, OperationVariables } from 'apollo-client/core/types';
 import { distanceInWordsToNow } from 'date-fns';
 import gql from 'graphql-tag';
 import { get } from 'lodash';
-import { castToReferenceSnapshot } from 'mobx-state-tree';
 import React from 'react';
 import { Query, QueryResult } from 'react-apollo';
 import { Toolbar } from '../../components/toolbar/Toolbar';
