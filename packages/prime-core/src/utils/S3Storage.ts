@@ -23,10 +23,10 @@ export class S3Storage {
 
     this.bucket = process.env.S3_BUCKET;
     this.s3 = new S3({
-      credentials: {
-        accessKeyId: process.env.S3_ACCESS_KEY_ID,
-        secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
-      },
+      accessKeyId: process.env.S3_ACCESS_KEY_ID,
+      secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+      endpoint: process.env.S3_ENDPOINT,
+      s3ForcePathStyle: true,
     });
   }
 

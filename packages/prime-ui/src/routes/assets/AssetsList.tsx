@@ -1,9 +1,10 @@
-import { Avatar, Card, Icon, Layout, Table, Tooltip, Upload } from 'antd';
+import { Avatar, Card, Icon, Layout, message, Table, Tooltip, Upload } from 'antd';
+import { UploadChangeParam } from 'antd/lib/upload/interface';
 import { distanceInWordsToNow } from 'date-fns';
 import gql from 'graphql-tag';
 import { get } from 'lodash';
 import React from 'react';
-import { Query } from 'react-apollo';
+import { Query, QueryResult } from 'react-apollo';
 import { Toolbar } from '../../components/toolbar/Toolbar';
 import { Assets } from '../../stores/assets';
 import { ContentReleases } from '../../stores/contentReleases';
@@ -57,11 +58,19 @@ export const AssetsList = ({ match, history }: any) => {
 
   let userId: any;
   let skip = 0;
+  const defaultQueryVariables = {
+    first: PER_PAGE,
+    skip,
+    order: 'updatedAt_DESC',
+  };
 
   const customRequest = (param: CustomRequestParam) => {
     return Assets.create({ upload: param.file })
       .catch(err => param.onError(err, null))
-      .then(response => param.onSuccess(response, null));
+      .then(response => {
+        message.success('File uploaded');
+        param.onSuccess(response, null);
+      });
   };
 
   return (
@@ -69,13 +78,9 @@ export const AssetsList = ({ match, history }: any) => {
       query={GET_ASSET_ENTRIES}
       client={client}
       fetchPolicy="network-only"
-      variables={{
-        first: PER_PAGE,
-        skip,
-        order: 'updatedAt_DESC',
-      }}
+      variables={defaultQueryVariables}
     >
-      {({ loading, error, data, refetch }) => {
+      {({ error, data, refetch }: QueryResult) => {
         if (error) {
           return `Error! ${error.message}`;
         }
@@ -174,6 +179,14 @@ export const AssetsList = ({ match, history }: any) => {
 
         const items = get(data, 'allAssets.edges', []).map(({ node }: any) => node);
 
+        const onChange = (info: UploadChangeParam) => {
+          const { file } = info;
+
+          if (file.status === 'done') {
+            refetch(defaultQueryVariables);
+          }
+        };
+
         return (
           <Layout>
             <Toolbar>
@@ -185,6 +198,8 @@ export const AssetsList = ({ match, history }: any) => {
                 listType="picture-card"
                 multiple={true}
                 customRequest={customRequest}
+                onChange={onChange}
+                showUploadList={false}
               >
                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                   <Icon type="upload" style={{ marginRight: 4 }} />

@@ -18,11 +18,11 @@ import { getRepository } from 'typeorm';
 import { EntityConnection } from 'typeorm-cursor-connection';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { Asset } from '../../../entities/Asset';
+import { User } from '../../../entities/User';
 import { S3Storage } from '../../../utils/S3Storage';
 import { AssetRepository } from '../repositories/AssetRepository';
 import { AssetInput } from '../types/AssetInput';
 import { ConnectionArgs, createConnectionType } from '../types/createConnectionType';
-import { User } from '../types/User';
 import { Authorized } from '../utils/Authorized';
 
 const AssetConnection = createConnectionType(Asset);
